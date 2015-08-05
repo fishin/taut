@@ -1,0 +1,28 @@
+{
+  "name": "taut",
+  "version": "0.0.1",
+  "description": "queue for ficion",
+  "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fishin/taut"
+  },
+  "engines": {
+    "node": ">=0.12.x"
+  },
+  "scripts": {
+    "test": "lab -a code -t 100 -v -m 60000 -L -r json -o lab.json -r html -o lab.html -r console -o stdout -r console -o console.log",
+    "console": "lab -a code -t 100 -v -m 60000 -L"
+  },
+  "author": "Lloyd Benson",
+  "license": "MIT",
+  "dependencies": {
+    "hoek": "2.x.x",
+    "pail": "git+https://github.com/fishin/pail"
+  },
+  "devDependencies": {
+    "code": "1.x.x",
+    "lab": "5.x.x",
+    "mock": "git+https://github.com/fishin/mock"
+  }
+}
