@@ -36,12 +36,10 @@ describe('pr', function () {
         var options = {
             getActivePRs: function () {
 
-                //console.log('getting active jobs 3');
                 return {
                     '1': {
                         prs: {
-                            '1': {},
-                            '2': {}
+                            '1': {}
                         }
                     }
                 };
@@ -50,15 +48,15 @@ describe('pr', function () {
         var taut = new Taut(options);
         var queueObj = taut.startQueue();
         var queue = taut.getQueue();
-        //taut.settings.startJob('1', null);
-        taut.addJob('1', '3');
+        taut.settings.startJob('1', '1');
+        taut.addJob('1', '2');
         queue = taut.getQueue();
         expect(queue.length).to.equal(1);
-        var intervalObj3 = setInterval(function () {
+        var intervalObj = setInterval(function () {
 
             if (queue.length === 1) {
-                clearInterval(intervalObj3);
-                taut.removeJob('1', '3');
+                clearInterval(intervalObj);
+                taut.removeJob('1', '2');
                 taut.stopQueue(queueObj);
                 done();
             }
