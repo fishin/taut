@@ -31,7 +31,7 @@ describe('pr', function () {
         }, 1000);
     });
 
-    it('addPR existing', function (done) {
+    it('addPR existing pr 1', function (done) {
 
         var options = {
             getActivePRs: function () {
@@ -58,6 +58,41 @@ describe('pr', function () {
                 if (queue.length === 1) {
                     clearInterval(intervalObj);
                     taut.removeJob('1', '1');
+                    taut.stopQueue(queueObj);
+                    done();
+                }
+            }, 1000);
+        });
+    });
+
+    it('addPR 2 existing job pr 1', function (done) {
+
+        var options = {
+            size: 2,
+            getActivePRs: function () {
+
+                return {
+                    '1': {
+                        prs: {
+                            '1': {}
+                        }
+                    }
+                };
+            }
+        };
+        var taut = new Taut(options);
+        var queueObj = taut.startQueue();
+        var queue = taut.getQueue();
+        taut.settings.startJob('1', '1', function () {
+
+            taut.addJob('1', '2');
+            queue = taut.getQueue();
+            expect(queue.length).to.equal(1);
+            var intervalObj = setInterval(function () {
+
+                if (queue.length === 1) {
+                    clearInterval(intervalObj);
+                    taut.removeJob('1', '2');
                     taut.stopQueue(queueObj);
                     done();
                 }
