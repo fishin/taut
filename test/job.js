@@ -152,18 +152,20 @@ describe('job', function () {
         var taut = new Taut(options);
         var queueObj = taut.startQueue();
         var queue = taut.getQueue();
-        taut.settings.startJob('2', null);
-        taut.addJob('1', null);
-        queue = taut.getQueue();
-        expect(queue.length).to.equal(1);
-        var intervalObj3 = setInterval(function () {
+        taut.settings.startJob('2', null, function () {
 
-            if (queue.length === 1) {
-                clearInterval(intervalObj3);
-                taut.removeJob('1', null);
-                taut.stopQueue(queueObj);
-                done();
-            }
-        }, 1000);
+            taut.addJob('1', null);
+            queue = taut.getQueue();
+            expect(queue.length).to.equal(1);
+            var intervalObj3 = setInterval(function () {
+
+                if (queue.length === 1) {
+                    clearInterval(intervalObj3);
+                    taut.removeJob('1', null);
+                    taut.stopQueue(queueObj);
+                    done();
+                }
+            }, 1000);
+        });
     });
 });
