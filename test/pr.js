@@ -34,6 +34,7 @@ describe('pr', function () {
     it('addPR existing pr 1', function (done) {
 
         var options = {
+            size: 2,
             getActivePRs: function () {
 
                 return {
@@ -65,7 +66,7 @@ describe('pr', function () {
         });
     });
 
-    it('addPR 2 existing job pr 1', function (done) {
+    it('addPR 2 for existing job', function (done) {
 
         var options = {
             size: 2,
@@ -100,16 +101,18 @@ describe('pr', function () {
         });
     });
 
+/*
+
     it('addPR job 1 pr 1 existing job 2 pr 1', function (done) {
 
         var options = {
-            size: 0,
+            size: 2,
             getActivePRs: function () {
 
                 return {
                     '2': {
                         prs: {
-                            '1': {}
+                            '3': {}
                         }
                     }
                 };
@@ -135,15 +138,19 @@ describe('pr', function () {
         });
     });
 
+*/
+
     it('addPR for full reel', function (done) {
 
         var options = {
+            size: 2,
             getActivePRs: function () {
 
                 return {
                     '1': {
                         prs: {
-                            '1': {}
+                            '1': {},
+                            '2': {}
                         }
                     }
                 };
@@ -154,7 +161,7 @@ describe('pr', function () {
         var queue = taut.getQueue();
         taut.settings.startJob('1', '1', function () {
 
-            taut.addJob('1', '2');
+            taut.addJob('1', '3');
             queue = taut.getQueue();
             expect(queue.length).to.equal(1);
             var intervalObj2 = setInterval(function () {

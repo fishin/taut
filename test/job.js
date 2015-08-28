@@ -111,6 +111,7 @@ describe('job', function () {
     it('addJob for startJob', function (done) {
 
         var options = {
+            size: 2,
             getActiveJobs: function () {
 
                 //console.log('getting active jobs 2');
@@ -144,8 +145,7 @@ describe('job', function () {
 
                 //console.log('getting active jobs 3');
                 return {
-                    '2': {},
-                    '3': {}
+                    '1': {}
                 };
             }
         };
