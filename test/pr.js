@@ -31,6 +31,40 @@ describe('pr', function () {
         }, 1000);
     });
 
+    it('addPR existing', function (done) {
+
+        var options = {
+            getActivePRs: function () {
+
+                return {
+                    '1': {
+                        prs: {
+                            '1': {}
+                        }
+                    }
+                };
+            }
+        };
+        var taut = new Taut(options);
+        var queueObj = taut.startQueue();
+        var queue = taut.getQueue();
+        taut.settings.startJob('1', '1', function () {
+
+            taut.addJob('1', '1');
+            queue = taut.getQueue();
+            expect(queue.length).to.equal(1);
+            var intervalObj = setInterval(function () {
+
+                if (queue.length === 1) {
+                    clearInterval(intervalObj);
+                    taut.removeJob('1', '1');
+                    taut.stopQueue(queueObj);
+                    done();
+                }
+            }, 1000);
+        });
+    });
+
     it('addPR for full reel', function (done) {
 
         var options = {
@@ -53,10 +87,10 @@ describe('pr', function () {
             taut.addJob('1', '2');
             queue = taut.getQueue();
             expect(queue.length).to.equal(1);
-            var intervalObj = setInterval(function () {
+            var intervalObj2 = setInterval(function () {
 
                 if (queue.length === 1) {
-                    clearInterval(intervalObj);
+                    clearInterval(intervalObj2);
                     taut.removeJob('1', '2');
                     taut.stopQueue(queueObj);
                     done();
