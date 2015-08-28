@@ -103,6 +103,7 @@ describe('pr', function () {
     it('addPR job 1 pr 1 existing job 2 pr 1', function (done) {
 
         var options = {
+            size: 0,
             getActivePRs: function () {
 
                 return {
