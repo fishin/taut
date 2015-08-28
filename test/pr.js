@@ -100,6 +100,40 @@ describe('pr', function () {
         });
     });
 
+    it('addPR job 1 pr 1 existing job 2 pr 1', function (done) {
+
+        var options = {
+            getActivePRs: function () {
+
+                return {
+                    '2': {
+                        prs: {
+                            '1': {}
+                        }
+                    }
+                };
+            }
+        };
+        var taut = new Taut(options);
+        var queueObj = taut.startQueue();
+        var queue = taut.getQueue();
+        taut.settings.startJob('1', '1', function () {
+
+            taut.addJob('1', '1');
+            queue = taut.getQueue();
+            expect(queue.length).to.equal(1);
+            var intervalObj = setInterval(function () {
+
+                if (queue.length === 1) {
+                    clearInterval(intervalObj);
+                    taut.removeJob('1', '1');
+                    taut.stopQueue(queueObj);
+                    done();
+                }
+            }, 1000);
+        });
+    });
+
     it('addPR for full reel', function (done) {
 
         var options = {
