@@ -1,19 +1,48 @@
 var Code = require('code');
 var Hapi = require('hapi');
 var Lab = require('lab');
+var Taut = require('../lib/index');
 
 var lab = exports.lab = Lab.script();
 var expect = Code.expect;
 var describe = lab.describe;
 var it = lab.it;
 
-var Taut = require('../lib/index');
+var internals = {
+    defaults: {
+        startJob: function (jobId, pr, cb) {
+
+            //console.log('starting job: ' + jobId + ' with pr: ' + pr);
+            return cb();
+        },
+        getActiveJobs: function () {
+
+            //console.log('getting active jobs 0');
+            return {};
+        },
+        getActivePullRequests: function () {
+
+            //console.log('getting active prs 0');
+            return {};
+        },
+        getJob: function (jobId, pr) {
+
+            //console.log('getting job: ' + jobId);
+            return {
+                id: '1',
+                name: 'job'
+            };
+        }
+    }
+};
+
+
 
 describe('job', function () {
 
     it('startQueue and stopQueue', function (done) {
 
-        var taut = new Taut({});
+        var taut = new Taut(internals.defaults);
         var queueObj = taut.startQueue();
         setTimeout(function () {
 
@@ -24,7 +53,7 @@ describe('job', function () {
 
     it('getQueue', function (done) {
 
-        var taut = new Taut({});
+        var taut = new Taut(internals.defaults);
         var queue = taut.getQueue();
         expect(queue.length).to.equal(0);
         done();
@@ -32,7 +61,7 @@ describe('job', function () {
 
     it('addJob 1', function (done) {
 
-        var taut = new Taut({});
+        var taut = new Taut(internals.defaults);
         var jobId = '1';
         taut.addJob(jobId, null);
         var queue = taut.getQueue();
@@ -42,16 +71,14 @@ describe('job', function () {
 
     it('addJob 1 again', function (done) {
 
-        var options = {
-            getActiveJobs: function () {
+        var taut = new Taut(internals.defaults);
+        taut.settings.getActiveJobs = function () {
 
-                //console.log('getting active jobs 1');
-                return {
-                    '1': {}
-                };
-            }
+            //console.log('getting active jobs 1');
+            return {
+                '1': {}
+            };
         };
-        var taut = new Taut(options);
         var jobId = '1';
         taut.addJob(jobId, null);
         var queue = taut.getQueue();
@@ -61,7 +88,7 @@ describe('job', function () {
 
     it('addJob 2', function (done) {
 
-        var taut = new Taut({});
+        var taut = new Taut(internals.defaults);
         var jobId = '2';
         taut.addJob(jobId, null);
         var queue = taut.getQueue();
@@ -71,7 +98,7 @@ describe('job', function () {
 
     it('removeJob 2', function (done) {
 
-        var taut = new Taut({});
+        var taut = new Taut(internals.defaults);
         var jobId = '2';
         taut.removeJob(jobId, null);
         var queue = taut.getQueue();
@@ -81,7 +108,7 @@ describe('job', function () {
 
     it('removeJob 1', function (done) {
 
-        var taut = new Taut({});
+        var taut = new Taut(internals.defaults);
         var jobId = '1';
         taut.removeJob(jobId, null);
         var queue = taut.getQueue();
@@ -91,7 +118,7 @@ describe('job', function () {
 
     it('startJob from queue', function (done) {
 
-        var taut = new Taut({});
+        var taut = new Taut(internals.defaults);
         var queueObj = taut.startQueue();
         var jobId = '1';
         taut.addJob(jobId, null);
@@ -110,17 +137,15 @@ describe('job', function () {
 
     it('addJob for startJob', function (done) {
 
-        var options = {
-            size: 2,
-            getActiveJobs: function () {
+        var taut = new Taut(internals.defaults);
+        taut.settings.size = 2;
+        taut.settings.getActiveJobs = function () {
 
-                //console.log('getting active jobs 2');
-                return {
-                    '2': {}
-                };
-            }
+            //console.log('getting active jobs 2');
+            return {
+                '2': {}
+            };
         };
-        var taut = new Taut(options);
         var queueObj = taut.startQueue();
         var jobId = '2';
         taut.addJob(jobId, null);
@@ -140,16 +165,14 @@ describe('job', function () {
 
     it('addJob for full reel', function (done) {
 
-        var options = {
-            getActiveJobs: function () {
+        var taut = new Taut(internals.defaults);
+        taut.settings.getActiveJobs = function () {
 
-                //console.log('getting active jobs 3');
-                return {
-                    '1': {}
-                };
-            }
+            //console.log('getting active jobs 3');
+            return {
+                '1': {}
+            };
         };
-        var taut = new Taut(options);
         var queueObj = taut.startQueue();
         var queue = taut.getQueue();
         taut.settings.startJob('2', null, function () {
