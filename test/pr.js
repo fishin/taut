@@ -43,7 +43,9 @@ describe('pr', function () {
         var taut = new Taut(internals.defaults);
         var queueObj = taut.startQueue();
         var jobId = '1';
-        var pr = '1';
+        var pr = {
+            number: 1
+        };
         taut.addJob(jobId, pr);
         var queue = taut.getQueue();
         expect(queue.length).to.equal(1);
@@ -74,22 +76,61 @@ describe('pr', function () {
         };
         var queueObj = taut.startQueue();
         var queue = taut.getQueue();
-        taut.settings.startJob('1', '1', function () {
+        var pr = {
+            number: 1
+        };
+        taut.settings.startJob('1', pr, function () {
 
-            taut.addJob('1', '1');
+            taut.addJob('1', pr);
             queue = taut.getQueue();
             expect(queue.length).to.equal(1);
             var intervalObj = setInterval(function () {
 
                 if (queue.length === 1) {
                     clearInterval(intervalObj);
-                    taut.removeJob('1', '1');
+                    taut.removeJob('1', 1);
                     taut.stopQueue(queueObj);
                     done();
                 }
             }, 1000);
         });
     });
+
+    it('addPR existing pr 1 again', function (done) {
+
+        var taut = new Taut(internals.defaults);
+        taut.settings.size = 2;
+        taut.settings.getActivePullRequests = function () {
+
+            return {
+                '1': {
+                    prs: {
+                        '1': {}
+                    }
+                }
+            };
+        };
+        var queueObj = taut.startQueue();
+        var queue = taut.getQueue();
+        var pr = {
+            number: 1
+        };
+        taut.addJob('1', pr);
+        queue = taut.getQueue();
+        expect(queue.length).to.equal(1);
+        taut.addJob('1', pr);
+        expect(queue.length).to.equal(1);
+        var intervalObj = setInterval(function () {
+
+            if (queue.length === 1) {
+                clearInterval(intervalObj);
+                taut.removeJob('1', 1);
+                taut.stopQueue(queueObj);
+                done();
+            }
+        }, 1000);
+    });
+
 
     it('addPR 2 for existing job', function (done) {
 
@@ -107,16 +148,19 @@ describe('pr', function () {
         };
         var queueObj = taut.startQueue();
         var queue = taut.getQueue();
-        taut.settings.startJob('1', '1', function () {
+        var pr = {
+            number: 1
+        };
+        taut.settings.startJob('1', pr, function () {
 
-            taut.addJob('1', '2');
+            taut.addJob('1', { number: 2 });
             queue = taut.getQueue();
             expect(queue.length).to.equal(1);
             var intervalObj = setInterval(function () {
 
                 if (queue.length === 1) {
                     clearInterval(intervalObj);
-                    taut.removeJob('1', '2');
+                    taut.removeJob('1', 2);
                     taut.stopQueue(queueObj);
                     done();
                 }
@@ -141,16 +185,19 @@ describe('pr', function () {
         };
         var queueObj = taut.startQueue();
         var queue = taut.getQueue();
-        taut.settings.startJob('1', '1', function () {
+        var pr = {
+            number: 1
+        };
+        taut.settings.startJob('1', pr, function () {
 
-            taut.addJob('1', '3');
+            taut.addJob('1', { number: 3 });
             queue = taut.getQueue();
             expect(queue.length).to.equal(1);
             var intervalObj2 = setInterval(function () {
 
                 if (queue.length === 1) {
                     clearInterval(intervalObj2);
-                    taut.removeJob('1', '2');
+                    taut.removeJob('1', 3);
                     taut.stopQueue(queueObj);
                     done();
                 }
