@@ -69,7 +69,7 @@ describe('job', function () {
         done();
     });
 
-    it('addJob 1 again', function (done) {
+    it('addJob 1 with running active job', function (done) {
 
         var taut = new Taut(internals.defaults);
         taut.settings.getActiveJobs = function () {
