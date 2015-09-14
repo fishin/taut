@@ -105,11 +105,10 @@ describe('job', function () {
         done();
     });
 
-    it('removeJob 1', function (done) {
+    it('clearQueue', function (done) {
 
         var taut = new Taut(internals.defaults);
-        var jobId = '1';
-        taut.removeJob(jobId, null);
+        taut.clearQueue();
         var queue = taut.getQueue();
         expect(queue.length).to.equal(0);
         done();
