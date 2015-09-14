@@ -1,5 +1,4 @@
 var Code = require('code');
-var Hapi = require('hapi');
 var Lab = require('lab');
 var Taut = require('../lib/index');
 
