@@ -1,13 +1,15 @@
-var Code = require('code');
-var Lab = require('lab');
-var Taut = require('../lib/index');
+'use strict';
 
-var lab = exports.lab = Lab.script();
-var expect = Code.expect;
-var describe = lab.describe;
-var it = lab.it;
+const Code = require('code');
+const Lab = require('lab');
+const Taut = require('../lib/index');
 
-var internals = {
+const lab = exports.lab = Lab.script();
+const expect = Code.expect;
+const describe = lab.describe;
+const it = lab.it;
+
+const internals = {
     defaults: {
         startJob: function (jobId, pr, cb) {
 
@@ -37,40 +39,40 @@ var internals = {
 
 
 
-describe('job', function () {
+describe('job', () => {
 
-    it('startQueue and stopQueue', function (done) {
+    it('startQueue and stopQueue', (done) => {
 
-        var taut = new Taut(internals.defaults);
-        var queueObj = taut.startQueue();
-        setTimeout(function () {
+        const taut = new Taut(internals.defaults);
+        const queueObj = taut.startQueue();
+        setTimeout(() => {
 
             taut.stopQueue(queueObj);
             done();
         }, 1000);
     });
 
-    it('getQueue', function (done) {
+    it('getQueue', (done) => {
 
-        var taut = new Taut(internals.defaults);
-        var queue = taut.getQueue();
+        const taut = new Taut(internals.defaults);
+        const queue = taut.getQueue();
         expect(queue.length).to.equal(0);
         done();
     });
 
-    it('addJob 1', function (done) {
+    it('addJob 1', (done) => {
 
-        var taut = new Taut(internals.defaults);
-        var jobId = '1';
+        const taut = new Taut(internals.defaults);
+        const jobId = '1';
         taut.addJob(jobId, null);
-        var queue = taut.getQueue();
+        const queue = taut.getQueue();
         expect(queue.length).to.equal(1);
         done();
     });
 
-    it('addJob 1 with running active job', function (done) {
+    it('addJob 1 with running active job', (done) => {
 
-        var taut = new Taut(internals.defaults);
+        const taut = new Taut(internals.defaults);
         taut.settings.getActiveJobs = function () {
 
             //console.log('getting active jobs 1');
@@ -78,51 +80,51 @@ describe('job', function () {
                 '1': {}
             };
         };
-        var jobId = '1';
+        const jobId = '1';
         taut.addJob(jobId, null);
-        var queue = taut.getQueue();
+        const queue = taut.getQueue();
         expect(queue.length).to.equal(1);
         done();
     });
 
-    it('addJob 2', function (done) {
+    it('addJob 2', (done) => {
 
-        var taut = new Taut(internals.defaults);
-        var jobId = '2';
+        const taut = new Taut(internals.defaults);
+        const jobId = '2';
         taut.addJob(jobId, null);
-        var queue = taut.getQueue();
+        const queue = taut.getQueue();
         expect(queue.length).to.equal(2);
         done();
     });
 
-    it('removeJob 2', function (done) {
+    it('removeJob 2', (done) => {
 
-        var taut = new Taut(internals.defaults);
-        var jobId = '2';
+        const taut = new Taut(internals.defaults);
+        const jobId = '2';
         taut.removeJob(jobId, null);
-        var queue = taut.getQueue();
+        const queue = taut.getQueue();
         expect(queue.length).to.equal(1);
         done();
     });
 
-    it('clearQueue', function (done) {
+    it('clearQueue', (done) => {
 
-        var taut = new Taut(internals.defaults);
+        const taut = new Taut(internals.defaults);
         taut.clearQueue();
-        var queue = taut.getQueue();
+        const queue = taut.getQueue();
         expect(queue.length).to.equal(0);
         done();
     });
 
-    it('startJob from queue', function (done) {
+    it('startJob from queue', (done) => {
 
-        var taut = new Taut(internals.defaults);
-        var queueObj = taut.startQueue();
-        var jobId = '1';
+        const taut = new Taut(internals.defaults);
+        const queueObj = taut.startQueue();
+        const jobId = '1';
         taut.addJob(jobId, null);
-        var queue = taut.getQueue();
+        let queue = taut.getQueue();
         expect(queue.length).to.equal(1);
-        var intervalObj1 = setInterval(function () {
+        const intervalObj1 = setInterval(() => {
 
             queue = taut.getQueue();
             if (queue.length === 0) {
@@ -133,9 +135,9 @@ describe('job', function () {
         }, 1000);
     });
 
-    it('addJob for startJob', function (done) {
+    it('addJob for startJob', (done) => {
 
-        var taut = new Taut(internals.defaults);
+        const taut = new Taut(internals.defaults);
         taut.settings.size = 2;
         taut.settings.getActiveJobs = function () {
 
@@ -144,12 +146,12 @@ describe('job', function () {
                 '2': {}
             };
         };
-        var queueObj = taut.startQueue();
-        var jobId = '2';
+        const queueObj = taut.startQueue();
+        const jobId = '2';
         taut.addJob(jobId, null);
-        var queue = taut.getQueue();
+        let queue = taut.getQueue();
         expect(queue.length).to.equal(1);
-        var intervalObj2 = setInterval(function () {
+        const intervalObj2 = setInterval(() => {
 
             queue = taut.getQueue();
             if (queue.length === 1) {
@@ -161,9 +163,9 @@ describe('job', function () {
         }, 1000);
     });
 
-    it('addJob for full reel', function (done) {
+    it('addJob for full reel', (done) => {
 
-        var taut = new Taut(internals.defaults);
+        const taut = new Taut(internals.defaults);
         taut.settings.getActiveJobs = function () {
 
             //console.log('getting active jobs 3');
@@ -171,14 +173,14 @@ describe('job', function () {
                 '1': {}
             };
         };
-        var queueObj = taut.startQueue();
-        var queue = taut.getQueue();
-        taut.settings.startJob('2', null, function () {
+        const queueObj = taut.startQueue();
+        let queue = taut.getQueue();
+        taut.settings.startJob('2', null, () => {
 
             taut.addJob('1', null);
             queue = taut.getQueue();
             expect(queue.length).to.equal(1);
-            var intervalObj3 = setInterval(function () {
+            const intervalObj3 = setInterval(() => {
 
                 if (queue.length === 1) {
                     clearInterval(intervalObj3);
